@@ -1,13 +1,18 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:firebase_dart/firebase_dart.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
+
+import 'utils/fetchWordOfTheDay.dart';
+import 'utils/fetchWords.dart';
 
 // For Google Cloud Run, set _hostname to '0.0.0.0'.
 const _hostname = 'localhost';
 
 void main(List<String> args) async {
+  FirebaseDart.setup();
   var parser = ArgParser()..addOption('port', abbr: 'p');
   var result = parser.parse(args);
 
@@ -24,7 +29,7 @@ void main(List<String> args) async {
 
   var handler = const shelf.Pipeline()
       .addMiddleware(shelf.logRequests())
-      .addHandler(_echoRequest);
+      .addHandler(FetchWordOfTheDay().handler);
 
   var server = await io.serve(handler, _hostname, port);
   print('Serving at http://${server.address.host}:${server.port}');
