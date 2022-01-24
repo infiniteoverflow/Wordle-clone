@@ -11,6 +11,7 @@ import 'fetchWords.dart';
 
 class FetchWordOfTheDay {
 
+  // Initialize Firebase Instance
   Future initFirebase() async{
     late FirebaseApp app;
     try{
@@ -24,6 +25,7 @@ class FetchWordOfTheDay {
     return app;
   }
 
+  // Fetch Word of the Day
   Future addWordOfTheDay(DatabaseReference dbRef) async{
     var words = FetchWords.getWords();
     words.removeWhere((element) =>  element.trim().length!=5);
@@ -50,6 +52,7 @@ class FetchWordOfTheDay {
   Handler get handler {
     var router = Router();
 
+    // Fetch Word of the Day from Firebase
     router.get('/wotd', (request) async {
         var app = await initFirebase();
         var fdb = FirebaseDatabase(app: app, databaseURL: Config.databaseUrl);
